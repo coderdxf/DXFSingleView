@@ -211,6 +211,7 @@
         butt.layer.borderWidth = 1;
         butt.layer.borderColor = self.noSelecteBorderColor.CGColor;
         butt.titleLabel.textColor = self.noSelecteTextColor;
+        [butt setAttributedTitle:[self attributedStringChangeColorWithStr:self.buttonTitleArray[i] otherColor:self.noSelecteTextColor] forState:UIControlStateNormal];
     }
     if ([self.delegate respondsToSelector:@selector(DXFSingleView:selectedView:andSelectedContent:)]) {
         [self.delegate DXFSingleView:self selectedView:_textField andSelectedContent:[_textField.text stringByAppendingString:self.textFieldRightText]];
