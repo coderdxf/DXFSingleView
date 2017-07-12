@@ -21,11 +21,6 @@
 
 @property(assign , nonatomic)NSInteger BtnHeight;
 
-/** 文字从后往前一段长度的文字字体颜色更改*/
-@property(assign , nonatomic)NSInteger fromBehindLength;
-/** fromBehindLength文字颜色的更改*/
-@property(strong , nonatomic)UIColor *fromBehindLengthTextColor;
-
 @property(assign , nonatomic)BOOL isHaveTextFiled;
 
 @property(assign , nonatomic)NSInteger textFiledHeight;
@@ -154,7 +149,7 @@
     }
     for (int i = 0; i<self.buttonTitleArray.count; i++) {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [btn setAttributedTitle:[self attributedStringChangeColorWithStr:self.buttonTitleArray[i]] forState:UIControlStateNormal];
+        [btn setAttributedTitle:[self attributedStringChangeColorWithStr:self.buttonTitleArray[i] otherColor:self.noSelecteTextColor] forState:UIControlStateNormal];
         btn.tag = 250 + i;
         btn.titleLabel.font = self.fontSize;
         btn.titleLabel.textColor = self.noSelecteTextColor;
@@ -185,7 +180,7 @@
     
     for (int i = 0; i<self.buttonTitleArray.count; i++) {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [btn setAttributedTitle:[self attributedStringChangeColorWithStr:self.buttonTitleArray[i]] forState:UIControlStateNormal];
+        [btn setAttributedTitle:[self attributedStringChangeColorWithStr:self.buttonTitleArray[i] otherColor:self.noSelecteTextColor] forState:UIControlStateNormal];
         btn.tag = 250 + i;
         btn.titleLabel.font = self.fontSize;
         btn.titleLabel.textColor = self.noSelecteTextColor;
@@ -234,24 +229,28 @@
             btn.selected = YES;
             btn.layer.borderWidth = 1;
             btn.layer.borderColor = self.selecteBorderColor.CGColor;
-            btn.titleLabel.textColor = self.selecteTextColor;
+//            btn.titleLabel.textColor = self.selecteTextColor;
+            [btn setAttributedTitle:[self attributedStringChangeColorWithStr:self.buttonTitleArray[i] otherColor:self.selecteTextColor] forState:UIControlStateNormal];
             continue;
         }
         UIButton *butt = (UIButton *)[self viewWithTag:250 + i];
         butt.selected = NO;
         butt.layer.borderWidth = 1;
         butt.layer.borderColor = self.noSelecteBorderColor.CGColor;
-        butt.titleLabel.textColor = self.noSelecteTextColor;
+        [butt setAttributedTitle:[self attributedStringChangeColorWithStr:self.buttonTitleArray[i] otherColor:self.noSelecteTextColor] forState:UIControlStateNormal];
+//        butt.titleLabel.textColor = self.noSelecteTextColor;
     }
     if ([self.delegate respondsToSelector:@selector(DXFSingleView:selectedView:andSelectedContent:)]) {
         [self.delegate DXFSingleView:self selectedView:btn andSelectedContent:btn.titleLabel.text];
     }
 }
--(NSAttributedString *)attributedStringChangeColorWithStr:(NSString *)str {
+-(NSAttributedString *)attributedStringChangeColorWithStr:(NSString *)str otherColor:(UIColor *)otherColor {
     NSMutableAttributedString *attrStr ;
     NSRange range = NSMakeRange(str.length -self.fromBehindLength, self.fromBehindLength);
+    NSRange range1 = NSMakeRange(0, str.length -self.fromBehindLength);
     attrStr = [[NSMutableAttributedString alloc] initWithString:str];
     [attrStr addAttribute:NSForegroundColorAttributeName value:self.fromBehindLengthTextColor range:range];
+    [attrStr addAttribute:NSForegroundColorAttributeName value:otherColor range:range1];
     return attrStr;
 }
 #pragma mark -- setter
@@ -266,13 +265,13 @@
 }
 -(void)setDefaultIndex:(NSInteger)defaultIndex {
     if(defaultIndex >= self.buttonTitleArray.count || defaultIndex < 0){
-      @throw [NSException exceptionWithName:@"defaultIndex is over the buttonTitleArray count" reason:nil userInfo:nil];
+        @throw [NSException exceptionWithName:@"defaultIndex is over the buttonTitleArray count" reason:nil userInfo:nil];
     }else {
         _defaultIndex = defaultIndex;
         UIButton *butt = (UIButton *)[self viewWithTag:250 + self.defaultIndex];
         butt.layer.borderColor = _selecteBorderColor.CGColor;
         butt.titleLabel.textColor = _selecteTextColor;
-        [butt setAttributedTitle:[self attributedStringChangeColorWithStr:butt.titleLabel.text] forState:UIControlStateNormal];
+        [butt setAttributedTitle:[self attributedStringChangeColorWithStr:butt.titleLabel.text otherColor:self.selecteTextColor] forState:UIControlStateNormal];
         if ([self.delegate respondsToSelector:@selector(DXFSingleView:selectedView:andSelectedContent:)]) {
             [self.delegate DXFSingleView:self selectedView:butt andSelectedContent:butt.titleLabel.text];
         }
@@ -334,15 +333,27 @@
 -(void)setFromBehindLength:(NSInteger)fromBehindLength {
     _fromBehindLength = fromBehindLength;
     for (int i = 0; i<self.buttonTitleArray.count; i++) {
+        NSString *titStr = (NSString *)self.buttonTitleArray[i];
+        if (fromBehindLength >titStr.length) {
+            _fromBehindLength = 0;
+        }
         UIButton *btn = (UIButton *)[self viewWithTag:250 + i];
-        [btn setAttributedTitle:[self attributedStringChangeColorWithStr:self.buttonTitleArray[i]] forState:UIControlStateNormal];
+        if (btn.tag == self.defaultIndex + 250) {
+            [btn setAttributedTitle:[self attributedStringChangeColorWithStr:self.buttonTitleArray[i] otherColor:self.selecteTextColor] forState:UIControlStateNormal];
+        }else {
+            [btn setAttributedTitle:[self attributedStringChangeColorWithStr:self.buttonTitleArray[i] otherColor:self.noSelecteTextColor] forState:UIControlStateNormal];
+        }
     }
 }
 -(void)setFromBehindLengthTextColor:(UIColor *)fromBehindLengthTextColor {
     _fromBehindLengthTextColor = fromBehindLengthTextColor;
     for (int i = 0; i<self.buttonTitleArray.count; i++) {
         UIButton *btn = (UIButton *)[self viewWithTag:250 + i];
-        [btn setAttributedTitle:[self attributedStringChangeColorWithStr:self.buttonTitleArray[i]] forState:UIControlStateNormal];
+        if (btn.tag == self.defaultIndex + 250) {
+            [btn setAttributedTitle:[self attributedStringChangeColorWithStr:self.buttonTitleArray[i] otherColor:self.selecteTextColor] forState:UIControlStateNormal];
+        }else {
+            [btn setAttributedTitle:[self attributedStringChangeColorWithStr:self.buttonTitleArray[i] otherColor:self.noSelecteTextColor] forState:UIControlStateNormal];
+        }
     }
 }
 -(void)setCornerRadius:(NSInteger)cornerRadius {

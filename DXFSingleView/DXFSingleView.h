@@ -29,6 +29,10 @@
 @property(strong, nonatomic)UIColor *selecteTextColor;
 /** 未选中的字体颜色*/
 @property(strong, nonatomic)UIColor *noSelecteTextColor;
+/** 文字从后往前一段长度的文字字体颜色更改*/
+@property(assign , nonatomic)NSInteger fromBehindLength;
+/** fromBehindLength文字颜色的更改*/
+@property(strong , nonatomic)UIColor *fromBehindLengthTextColor;
 /** 圆角半径*/
 @property(assign , nonatomic)NSInteger cornerRadius;
 /** 输入框  可以拿到输入框进行相应的设置*/
@@ -42,8 +46,9 @@
 
 
 /** 存在textField初始化方式 
-    textFiled高度与按钮的高度一致
-    此时的rowCount和columnCount记住把textFiled控件也算在内
+  * textFiled高度与按钮的高度一致
+  * 此时的rowCount和columnCount记住把textFiled控件也算在内
+  * textFiled右边没有文本传nil即可
  */
 -(instancetype)initWithFrame:(CGRect)frame buttonTitleArray:(NSArray *)buttonTitleArray rowCount:(NSInteger)rowCount columnCount:(NSInteger)columnCount BtnWidth:(NSInteger)BtnWidth BtnHeight:(NSInteger)BtnHeight textFiledWidth:(NSInteger)textFiledWidth textFieldRightText:(NSString *)textFieldRightText textFieldRightTextFont:(UIFont *)textFieldRightTextFont textFieldRightTextColor:(UIColor *)textFieldRightTextColor delegate:(id<DXFSingleViewDelegate>)delegate;
 

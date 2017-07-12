@@ -25,10 +25,12 @@
     singleView.defaultIndex = 1;
     [self.view addSubview:singleView];
     
-    DXFSingleView *textView = [[DXFSingleView alloc] initWithFrame:CGRectMake(0, 180, [UIScreen mainScreen].bounds.size.width, 66) buttonTitleArray:@[@"10元",@"20元",@"50元",@"100元"] rowCount:1 columnCount:5 BtnWidth:48 BtnHeight:23 textFiledWidth:106 textFieldRightText:@"元" textFieldRightTextFont: [UIFont systemFontOfSize:16] textFieldRightTextColor: [UIColor grayColor] delegate:self];
+    DXFSingleView *textView = [[DXFSingleView alloc] initWithFrame:CGRectMake(0, 180, [UIScreen mainScreen].bounds.size.width, 66) buttonTitleArray:@[@"10元",@"20元",@"50元",@"100元"] rowCount:1 columnCount:5 BtnWidth:48 BtnHeight:23 textFiledWidth:106 textFieldRightText:@"元" textFieldRightTextFont: [UIFont systemFontOfSize:16] textFieldRightTextColor: [UIColor greenColor] delegate:self];
 //    textView.backgroundColor = [UIColor yellowColor];
     textView.textField.placeholder = @"其他金额";
     textView.defaultIndex = 3;
+    textView.fromBehindLength = 1;
+    textView.fromBehindLengthTextColor = [UIColor greenColor];
     [self.view addSubview:textView];
     
     
